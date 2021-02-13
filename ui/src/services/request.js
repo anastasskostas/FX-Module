@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { displayNotification } from '../utils/CallsInterceptor.jsx';
 
 // create a custom instance of axios
 const instance = axios.create();
@@ -9,7 +10,7 @@ export function get(url) {
       headers: {
         'Accept': 'application/json,application/xml;q=0.9,*/*;q=0.8',
         "Access-Control-Allow-Origin": "*",
-        'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
       }
     }).then(response => {
       resolve(response);
@@ -28,6 +29,7 @@ export function post(url, data) {
       }
     }).then(response => {
       resolve(response);
+      displayNotification(handleResponse(response), false);
     }).catch(error => {
       catchError(handleResponse(error), reject);
     });
@@ -44,5 +46,6 @@ function handleResponse(response) {
 
 function catchError(error, reject) {
   reject(error);
+  displayNotification(error, true);
 }
 

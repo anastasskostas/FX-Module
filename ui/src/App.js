@@ -31,6 +31,7 @@ class App extends Component {
             </Switch>
           </Container>
         </React.Suspense>
+        <div id="toaster-notifications"></div>
       </HashRouter>
     );
   }

@@ -179,6 +179,9 @@ function PurchaseHtml(props) {
     const steps = getSteps();
 
     const handleNext = () => {
+        if (activeStep === steps.length - 1) {
+            props.confirmTransaction()
+        }
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
