@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PurchaseHtml from "./Purchase.html";
 
 import { getCurrenciesData } from "../../services/Api.service";
+import { EditorState, convertToRaw } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
 
 class PurchaseComponent extends Component {
 
@@ -16,6 +18,9 @@ class PurchaseComponent extends Component {
             selectedCurrency: null,
             selectedRate: null,
             isLoadingCurrencies: false,
+            formattedNote: "",
+            formattedNoteLength: 0,
+            editorState: EditorState.createEmpty(),
         }
     }
 
@@ -37,6 +42,7 @@ class PurchaseComponent extends Component {
         })
     }
 
+    // Step 1 functions
     handleDropdownChange = (name, value) => {
         const { currencyRates } = this.state;
         const selectedRate = value && (1 / currencyRates[value.name]).toFixed(4);
@@ -72,8 +78,34 @@ class PurchaseComponent extends Component {
         }
     }
 
+    // Step 2 functions
+    handleInputChange = (e, text) => {
+        this.setState({
+            [text]: e.target.value
+        })
+    }
+
+    updateEditorState = (editorState) => {
+        this.setState({
+            editorState
+        })
+
+        const contentState = editorState.getCurrentContent();
+        const rawContentState = convertToRaw(contentState);
+        const formattedNote = draftToHtml(
+            rawContentState
+        );
+        const contentStateLength = contentState.getPlainText().length
+
+        this.setState({
+            editorState,
+            formattedNoteLength: contentStateLength,
+            formattedNote
+        });
+    }
+
     isButtonDisabled = (activeStep) => {
-        if ((activeStep === 0 && this.state.purchaseAmount)) {
+        if ((activeStep === 0 && this.state.purchaseAmount) || activeStep === 1) {
             return false;
         }
         return true;
@@ -85,6 +117,8 @@ class PurchaseComponent extends Component {
                 data={this.state}
                 handleDropdownChange={this.handleDropdownChange}
                 handleAmountChange={this.handleAmountChange}
+                handleInputChange={this.handleInputChange}
+                updateEditorState={this.updateEditorState}
                 isButtonDisabled={this.isButtonDisabled}
             />
         )

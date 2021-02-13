@@ -3,7 +3,7 @@ import { Col, Form, InputGroup, Row } from 'react-bootstrap';
 import { Button, Step, Stepper, StepLabel, Typography, makeStyles } from '@material-ui/core';
 import Select from 'react-select'
 import { currencySymbols } from '../../utils/CurrencySymbols';
-
+import RichEditor from '../Shared/RichEditor/RichEditor';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -97,7 +97,27 @@ function getStepContent(stepIndex, props) {
             );
         case 1:
             return (
-                <></>
+                <Row className="justify-content-md-center">
+                    <Col xs="12" lg="8">
+                        {/* Plain text */}
+                        {/* <Form>
+                            <Form.Group controlId="formBasicEmail">
+                                <Form.Label>Note</Form.Label>
+                                <Form.Control maxLength="160" as="textarea" rows="5" type="text" value={props.data.formattedNote} placeholder="Enter email" onChange={(event) => { props.handleInputChange(event, 'formattedNote') }} />
+                                <Form.Text className="text-danger">
+                                    {props.data.formattedNote.length} characters (Maximum 160).
+                            </Form.Text>
+                            </Form.Group>
+                        </Form> */}
+
+                        <div className="editorContainer">
+                            <div className="editors">
+                                <RichEditor editorState={props.data.editorState} updateEditorState={props.updateEditorState} />
+                                <span className="text-danger">{props.data.formattedNoteLength} characters (Maximum 160).</span>
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
             )
         case 2:
             return (
