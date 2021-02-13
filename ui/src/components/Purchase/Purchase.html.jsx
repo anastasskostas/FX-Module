@@ -188,6 +188,7 @@ function PurchaseHtml(props) {
 
     const handleReset = () => {
         setActiveStep(0);
+        props.resetData();
     };
 
     return (

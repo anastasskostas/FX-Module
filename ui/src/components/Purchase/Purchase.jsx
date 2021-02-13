@@ -133,6 +133,22 @@ class PurchaseComponent extends Component {
         return true;
     }
 
+    resetData = () => {
+        this.setState({
+            purchaseAmount: "",
+            sellAmount: "0.00",
+            selectedCurrency: null,
+            selectedRate: null,
+            formattedNote: "",
+            formattedNoteLength: 0,
+            acceptTransaction: false,
+            editorState: EditorState.createEmpty()
+        }, () => {
+            //Get "new" currency rates - set timeouts again
+            this.getInitialData();
+        })
+    }
+
     render() {
         return (
             <PurchaseHtml
@@ -143,6 +159,7 @@ class PurchaseComponent extends Component {
                 updateEditorState={this.updateEditorState}
                 handleConfirmCheckboxChange={this.handleConfirmCheckboxChange}
                 confirmTransaction={this.confirmTransaction}
+                resetData={this.resetData}
                 isButtonDisabled={this.isButtonDisabled}
             />
         )
