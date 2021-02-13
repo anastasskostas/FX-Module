@@ -4,6 +4,12 @@ import PurchaseHtml from "./Purchase.html";
 import { getCurrenciesData, purchaseCurrency } from "../../services/Api.service";
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
+import config from "../../config/config";
+import { displayNotification } from '../../utils/CallsInterceptor.jsx';
+
+const EXPIRED_TIMEOUT = 1000 * 60 * 30;
+const WARNING_TIMEOUT = EXPIRED_TIMEOUT - 1000 * 60 * 2;
+let timeoutWarning, timeoutExpired;
 
 class PurchaseComponent extends Component {
 
@@ -30,6 +36,16 @@ class PurchaseComponent extends Component {
     }
 
     getInitialData = () => {
+        displayNotification({ statusText: config.START_SESSION }, false, "Hi");
+        timeoutWarning = setTimeout(() => {
+            displayNotification({ statusText: config.WARNING_SESSION_BODY }, true, config.WARNING_SESSION);
+        }, WARNING_TIMEOUT);
+
+        timeoutExpired = setTimeout(() => {
+            displayNotification({ statusText: config.EXPIRED_SESSION_BODY }, true, config.EXPIRED_SESSION);
+            this.props.history.replace('/home');
+        }, EXPIRED_TIMEOUT);
+
         this.setState({ isLoadingCurrencies: true });
         getCurrenciesData().then(response => {
             this.setState({
@@ -122,6 +138,8 @@ class PurchaseComponent extends Component {
         }
 
         purchaseCurrency(data).then(() => {
+            clearTimeout(timeoutWarning);
+            clearTimeout(timeoutExpired);
         }).catch(error => {
         })
     }
@@ -147,6 +165,11 @@ class PurchaseComponent extends Component {
             //Get "new" currency rates - set timeouts again
             this.getInitialData();
         })
+    }
+
+    componentWillUnmount() {
+        clearTimeout(timeoutWarning);
+        clearTimeout(timeoutExpired);
     }
 
     render() {
