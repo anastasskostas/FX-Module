@@ -27,6 +27,7 @@ class PurchaseComponent extends Component {
             formattedNote: "",
             formattedNoteLength: 0,
             editorState: EditorState.createEmpty(),
+            isPlainText: false,
             acceptTransaction: false,
         }
     }
@@ -121,6 +122,14 @@ class PurchaseComponent extends Component {
         });
     }
 
+    usePlainText = () => {
+        this.setState({
+            isPlainText: true,
+            formattedNote: '',
+            formattedNoteLength: 0
+        })
+    }
+
     // Step 3 functions
     handleConfirmCheckboxChange = (event) => {
         this.setState({
@@ -180,6 +189,7 @@ class PurchaseComponent extends Component {
                 handleAmountChange={this.handleAmountChange}
                 handleInputChange={this.handleInputChange}
                 updateEditorState={this.updateEditorState}
+                usePlainText={this.usePlainText}
                 handleConfirmCheckboxChange={this.handleConfirmCheckboxChange}
                 confirmTransaction={this.confirmTransaction}
                 resetData={this.resetData}
