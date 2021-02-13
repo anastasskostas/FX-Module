@@ -1,0 +1,21 @@
+{
+  "name": "fx-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "node ./src/api.js",
+  "scripts": {
+    "start:dev": "cross-env NODE_ENV=development node ./src/api.js",
+    "start:prod": "cross-env NODE_ENV=production node ./src/api.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "config": "^3.3.3",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "express": "^4.17.1",
+    "express-generator": "^4.16.1",
+    "redis": "^3.0.2"
+  }
+}
