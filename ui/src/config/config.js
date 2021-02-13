@@ -13,6 +13,7 @@ const configuration = {
     EXPIRED_SESSION: "Session Timeout",
     EXPIRED_SESSION_BODY: "Sorry. Please try again.",
     
+    getTransactionsEndpoint: "/transactions",
     purchaseCurrencyEndpoint: "/purchase",
     
     ...config

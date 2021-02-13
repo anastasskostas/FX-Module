@@ -4,6 +4,10 @@ import { get, post } from './request';
 import XMLData from './../utils/currencies.xml';
 var XMLParser = require('react-xml-parser');
 
+export const getTransactions = () => {
+  return get(`${config.baseUrl}${config.getTransactionsEndpoint}`);
+}
+
 export const purchaseCurrency = (data) => {
   return post(`${config.baseUrl}${config.purchaseCurrencyEndpoint}`, data)
 }
