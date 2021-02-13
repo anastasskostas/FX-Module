@@ -1,1 +1,16 @@
 @import "../node_modules/currency-flags/dist/currency-flags.min.css";
+@import "~react-datepicker/dist/react-datepicker.css";
+
+.pointer {
+    cursor: pointer;
+}
+
+.react-datepicker-wrapper,
+.react-datepicker__input-container,
+.react-datepicker__input-container input {
+    width: 100%;
+}
+
+.note p {
+    margin-bottom: 0;
+}

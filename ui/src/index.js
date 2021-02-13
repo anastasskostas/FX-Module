@@ -4,6 +4,7 @@ import './index.scss';
 import App from './App';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './utils/fontawesome';
 
 ReactDOM.render(
   <App />,
