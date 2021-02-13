@@ -156,12 +156,12 @@ function HistoryHtml(props) {
                                                             </Col>
                                                             <Col>
                                                                 <div>
-                                                                    <span className=""><strong>Bought {purchaseCurrency} from GBP</strong></span>
-                                                                    <span className="float-right">+ {currencySymbols[purchaseCurrency]}{parseFloat(purchaseAmount).toFixed(2)}</span>
+                                                                    <span className="text-nowrap"><strong>Bought {purchaseCurrency} from GBP</strong></span>
+                                                                    <span className="text-nowrap float-right">+ {currencySymbols[purchaseCurrency]}{parseFloat(purchaseAmount).toFixed(2)}</span>
                                                                 </div>
                                                                 <div>
                                                                     <span className="">{ConvertMillisecondsToDate(date)}</span>
-                                                                    <span className="float-right">- {currencySymbols["GBP"]}{sellAmount}</span>
+                                                                    <span className="text-nowrap float-right">- {currencySymbols["GBP"]}{sellAmount}</span>
                                                                 </div>
                                                                 <div>
                                                                     <span className="note">
