@@ -1,8 +1,12 @@
-import { get } from './request';
+import config from '../config/config';
+import { get, post } from './request';
 
 import XMLData from './../utils/currencies.xml';
 var XMLParser = require('react-xml-parser');
 
+export const purchaseCurrency = (data) => {
+  return post(`${config.baseUrl}${config.purchaseCurrencyEndpoint}`, data)
+}
 
 export const getCurrenciesData = () => {
   return get(XMLData).then((response) => {

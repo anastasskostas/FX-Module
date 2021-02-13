@@ -4,6 +4,7 @@ import { Button, Step, Stepper, StepLabel, Typography, makeStyles } from '@mater
 import Select from 'react-select'
 import { currencySymbols } from '../../utils/CurrencySymbols';
 import RichEditor from '../Shared/RichEditor/RichEditor';
+import ReactHtmlParser from 'react-html-parser';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -121,7 +122,35 @@ function getStepContent(stepIndex, props) {
             )
         case 2:
             return (
-                <></>
+                <>
+                    <Row className="justify-content-md-center">
+                        <Col xs="2" sm="2" md="1"><strong>Buy:</strong></Col>
+                        <Col xs="10" sm="6" md="6">{props.data.selectedCurrency.name} {parseFloat(props.data.purchaseAmount).toFixed(2)}</Col>
+                    </Row>
+                    <Row className="justify-content-md-center">
+                        <Col xs="2" sm="2" md="1"><strong>Sell:</strong></Col>
+                        <Col xs="10" sm="6" md="6">GBP {props.data.sellAmount}</Col>
+                    </Row>
+                    <Row className="justify-content-md-center">
+                        <Col xs="2" sm="2" md="1"><strong>Note:</strong></Col>
+                        <Col xs="10" sm="6" md="6">{ReactHtmlParser(props.data.formattedNote)}</Col>
+                    </Row>
+
+                    <Row className="justify-content-md-center">
+                        <Col xs="12" md="8">
+                            <input
+                                type="checkbox"
+                                name="confirm-transaction-checkbox"
+                                checked={props.data.acceptTransaction}
+                                onChange={(event) => props.handleConfirmCheckboxChange(event)}
+                                className="mr-2 pointer"
+                            />
+                            <label>
+                                Complete purchase? <span className="text-danger">*</span>
+                            </label>
+                        </Col>
+                    </Row>
+                </>
             )
         default:
             return 'Unknown stepIndex';

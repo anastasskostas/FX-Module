@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PurchaseHtml from "./Purchase.html";
 
-import { getCurrenciesData } from "../../services/Api.service";
+import { getCurrenciesData, purchaseCurrency } from "../../services/Api.service";
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 
@@ -21,6 +21,7 @@ class PurchaseComponent extends Component {
             formattedNote: "",
             formattedNoteLength: 0,
             editorState: EditorState.createEmpty(),
+            acceptTransaction: false,
         }
     }
 
@@ -104,8 +105,29 @@ class PurchaseComponent extends Component {
         });
     }
 
+    // Step 3 functions
+    handleConfirmCheckboxChange = (event) => {
+        this.setState({
+            acceptTransaction: event.target.checked
+        })
+    }
+
+    confirmTransaction = () => {
+        const data = {
+            purchaseCurrency: this.state.selectedCurrency.name,
+            purchaseAmount: this.state.purchaseAmount,
+            formattedNote: this.state.formattedNote,
+            sellAmount: this.state.sellAmount,
+            date: Date.now()
+        }
+
+        purchaseCurrency(data).then(() => {
+        }).catch(error => {
+        })
+    }
+
     isButtonDisabled = (activeStep) => {
-        if ((activeStep === 0 && this.state.purchaseAmount) || activeStep === 1) {
+        if ((activeStep === 0 && this.state.purchaseAmount) || activeStep === 1 || (activeStep === 2 && this.state.acceptTransaction)) {
             return false;
         }
         return true;
@@ -119,6 +141,8 @@ class PurchaseComponent extends Component {
                 handleAmountChange={this.handleAmountChange}
                 handleInputChange={this.handleInputChange}
                 updateEditorState={this.updateEditorState}
+                handleConfirmCheckboxChange={this.handleConfirmCheckboxChange}
+                confirmTransaction={this.confirmTransaction}
                 isButtonDisabled={this.isButtonDisabled}
             />
         )
