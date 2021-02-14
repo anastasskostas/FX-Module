@@ -7,16 +7,15 @@ import draftToHtml from 'draftjs-to-html';
 import config from "../../config/config";
 import { displayNotification } from '../../utils/CallsInterceptor.jsx';
 
-const EXPIRED_TIMEOUT = 1000 * 60 * 30;
-const WARNING_TIMEOUT = EXPIRED_TIMEOUT - 1000 * 60 * 2;
-let timeoutWarning, timeoutExpired;
+const EXPIRED_TIMEOUT = 60 * 30; // Expire after 30 minutes
+const WARNING_TIMEOUT = 60 * 2; // Last 120 seconds
 
 class PurchaseComponent extends Component {
 
     constructor() {
         super();
         this.state = {
-            time: '',
+            dateTime: '',
             purchaseAmount: "",
             sellAmount: "0.00",
             currencyRates: {},
@@ -29,28 +28,22 @@ class PurchaseComponent extends Component {
             editorState: EditorState.createEmpty(),
             isPlainText: false,
             acceptTransaction: false,
+            time: {},
+            seconds: EXPIRED_TIMEOUT
         }
+        this.timer = 0;
     }
 
     componentDidMount() {
         this.getInitialData();
+        this.setInitialTimer();
     }
 
     getInitialData = () => {
-        displayNotification({ statusText: config.START_SESSION }, false, "Hi");
-        timeoutWarning = setTimeout(() => {
-            displayNotification({ statusText: config.WARNING_SESSION_BODY }, true, config.WARNING_SESSION);
-        }, WARNING_TIMEOUT);
-
-        timeoutExpired = setTimeout(() => {
-            displayNotification({ statusText: config.EXPIRED_SESSION_BODY }, true, config.EXPIRED_SESSION);
-            this.props.history.replace('/home');
-        }, EXPIRED_TIMEOUT);
-
         this.setState({ isLoadingCurrencies: true });
         getCurrenciesData().then(response => {
             this.setState({
-                time: response.time,
+                dateTime: response.time,
                 currencyRates: response.currencyRates,
                 currencies: response.currencies
             })
@@ -147,8 +140,7 @@ class PurchaseComponent extends Component {
         }
 
         purchaseCurrency(data).then(() => {
-            clearTimeout(timeoutWarning);
-            clearTimeout(timeoutExpired);
+            clearInterval(this.timer);
         }).catch(error => {
         })
     }
@@ -171,14 +163,69 @@ class PurchaseComponent extends Component {
             acceptTransaction: false,
             editorState: EditorState.createEmpty()
         }, () => {
-            //Get "new" currency rates - set timeouts again
-            this.getInitialData();
+            this.getInitialData(); //Get "new" currency rates
+            this.setState({
+                seconds: EXPIRED_TIMEOUT
+            }, () => {
+                this.setInitialTimer();
+            })
         })
     }
 
+
+    // Functions for timer
+    setInitialTimer = () => {
+        this.timer = 0;
+        let timeLeftVar = this.secondsToTime(this.state.seconds);
+        this.setState({ time: timeLeftVar });
+        this.startTimer();
+    }
+
+    secondsToTime = (secs) => {
+        let hours = Math.floor(secs / (60 * 60));
+
+        let divisor_for_minutes = secs % (60 * 60);
+        let minutes = Math.floor(divisor_for_minutes / 60);
+
+        let divisor_for_seconds = divisor_for_minutes % 60;
+        let seconds = Math.ceil(divisor_for_seconds);
+
+        let obj = {
+            "h": hours,
+            "m": minutes,
+            "s": seconds
+        };
+        return obj;
+    }
+
+    startTimer = () => {
+        if (this.timer === 0 && this.state.seconds > 0) {
+            this.timer = setInterval(this.countDown, 1000);
+        }
+    }
+
+    countDown = () => {
+        // Remove one second, set state so a re-render happens.
+        let seconds = this.state.seconds - 1;
+        this.setState({
+            time: this.secondsToTime(seconds),
+            seconds: seconds,
+        });
+
+        // Check if we're at two last minutes.
+        if (seconds === WARNING_TIMEOUT) {
+            displayNotification({ statusText: config.WARNING_SESSION_BODY }, true, config.WARNING_SESSION);
+        }
+        // Check if we're at zero.
+        if (seconds === 0) {
+            clearInterval(this.timer);
+            displayNotification({ statusText: config.EXPIRED_SESSION_BODY }, true, config.EXPIRED_SESSION);
+            this.props.history.replace('/home');
+        }
+    }
+
     componentWillUnmount() {
-        clearTimeout(timeoutWarning);
-        clearTimeout(timeoutExpired);
+        clearInterval(this.timer);
     }
 
     render() {

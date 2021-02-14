@@ -89,7 +89,7 @@ function getStepContent(stepIndex, props) {
                                     />
                                 </InputGroup>
                                 <Form.Text className="text-muted">
-                                    Latest updated time: {props.data.time}
+                                    Latest updated time: {props.data.dateTime}
                                 </Form.Text>
                             </Form.Group>
                         </Form>
@@ -197,6 +197,7 @@ function PurchaseHtml(props) {
 
     return (
         <div className={classes.root}>
+            <div className="text-right">Time Remaining: {props.data.time.m < 10 && '0'}{props.data.time.m}:{props.data.time.s < 10 && '0'}{props.data.time.s}</div>
             <Stepper activeStep={activeStep} alternativeLabel>
                 {steps.map((label) => (
                     <Step key={label}>
