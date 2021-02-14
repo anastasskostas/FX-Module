@@ -1,6 +1,6 @@
 FROM node:13.12.0-alpine
 
-# cd /app
+# cd /usr/src/app/ui
 WORKDIR /usr/src/app/ui
 
 COPY package*.json ./

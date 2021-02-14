@@ -1,7 +1,9 @@
 let config;
-
+if (process.env.REACT_APP_ENVIRONMENT === 'prod') {
+    config = require(`./config.prod`).default
+}
 if (process.env.REACT_APP_ENVIRONMENT === 'dev') {
-  config = require(`./config.dev`).default
+    config = require(`./config.dev`).default
 }
 
 
@@ -12,11 +14,11 @@ const configuration = {
     WARNING_SESSION_BODY: "<div>Your session is about to expire.</div><div>Your process will be lost in 2 minutes.</div>",
     EXPIRED_SESSION: "Session Timeout",
     EXPIRED_SESSION_BODY: "Sorry. Please try again.",
-    
+
     getTransactionsEndpoint: "/transactions",
     purchaseCurrencyEndpoint: "/purchase",
-    
+
     ...config
-  };
-  
-  export default configuration;
+};
+
+export default configuration;
